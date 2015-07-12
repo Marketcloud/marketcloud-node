@@ -1,7 +1,7 @@
 # node-marketcloud
 Marketcloud nodejs client library
 
-```
+```javascript
 var Marketcloud = require('marketcloud');
 var mc = new Marketcloud.Client({
    publicKey : 'your-public-key-here',
