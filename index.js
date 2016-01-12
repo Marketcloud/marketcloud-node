@@ -1,27 +1,505 @@
 /*
-
-*	Marketcloud Javascript SDK
+*	Marketcloud NodeJS SDK
 *   http://www.marketcloud.it
 *
-*	Copyright (c) 2015 Herapi SRLS
+*	Copyright (c) 2016 Herapi SRLS
 *
-*	Written by Mattia Alfieri <m.alfieri@marketcloud.it>
+*	For informations info@marketcloud.it
 *
-
 */
-(function(){function h(){window.DEBUG&&console.log(Array.prototype.slice.call(arguments))}function l(c,a,b){var d="",e;for(e in c)b&&a[b]&&0!==a[b].indexOf(c[e])&&(d+=b),d=a[e]?d+e:d+("["+e+"]"),c[e]instanceof Array?d+=l(c[e],a,e):c[e]instanceof Object?d+=l(c[e],a):(d+="="+c[e],d+="&");return d}function p(){try{return new XMLHttpRequest}catch(c){}try{return new ActiveXObject("Msxml3.XMLHTTP")}catch(c){}try{return new ActiveXObject("Msxml2.XMLHTTP.6.0")}catch(c){}try{return new ActiveXObject("Msxml2.XMLHTTP.3.0")}catch(c){}try{return new ActiveXObject("Msxml2.XMLHTTP")}catch(c){}try{return new ActiveXObject("Microsoft.XMLHTTP")}catch(c){}return null}
-Request=function(c){var a=new p;a.open(c.method,c.url,!0);a.onreadystatechange=function(){if(4===a.readyState)if(3<Number(a.status.toString()[0])){if(c.hasOwnProperty("error")){if("function"!==typeof c.error)throw Error("error must be function");h(JSON.parse(a.responseText));c.error(JSON.parse(a.responseText),a.status)}}else if(c.hasOwnProperty("success")){if("function"!==typeof c.success)throw Error("success must be function");h(JSON.parse(a.responseText));c.success(JSON.parse(a.responseText),a.status)}};
-a.setRequestHeader("Content-Type","application/json");if(c.hasOwnProperty("headers"))for(var b in c.headers)a.setRequestHeader(b,c.headers[b]);h("Firing this request object ",c);c.hasOwnProperty("data")?a.send(JSON.stringify(c.data)):a.send()};var e=function(c,a,b,f){b={success:b,error:f,headers:{}};b.headers.Authorization=null===d.token?d["public"]:d["public"]+":"+d.token;0>c.indexOf("http://")&&(b.url=d.baseUrl+c);0<Object.keys(a).length&&(c=b.url,a=l(a,a),a=encodeURI(a.substring(0,a.length-1).split(" ").join("+")),
-b.url=c+("?"+a));b.method="GET";return Request(b)},k=function(c,a,b){a={success:a,error:b,headers:{}};a.headers.Authorization=null===d.token?d["public"]:d["public"]+":"+d.token;0>c.indexOf("http://")&&(a.url=d.baseUrl+c);a.method="DELETE";return Request(a)},g=function(c,a,b,f){a={success:b,error:f,data:a,headers:{}};a.headers.Authorization=null===d.token?d["public"]:d["public"]+":"+d.token;0>c.indexOf("http://")&&(a.url=d.baseUrl+c);a.method="POST";return Request(a)},m=function(c,a,b,f){a={success:b,
-error:f,data:a,headers:{}};a.headers.Authorization=null===d.token?d["public"]:d["public"]+":"+d.token;0>c.indexOf("http://")&&(a.url=d.baseUrl+c);a.method="PATCH";return Request(a)},n=function(c,a,b,f){a={success:b,error:f,data:a,headers:{}};a.headers.Authorization=null===d.token?d["public"]:d["public"]+":"+d.token;0>c.indexOf("http://")&&(a.url=d.baseUrl+c);a.method="PUT";return Request(a)},q="object"==typeof self&&self.self===self&&self||"object"==typeof global&&global.global===global&&global||
-this,d={"public":null,token:null,baseUrl:"http://api.marketcloud.it/v0",addresses:{},brands:{},carts:{},categories:{},currencies:{},orders:{},products:{},shippings:{},stores:{},taxes:{},users:{}};d.brands.list=function(c,a){e("/brands",c||{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.brands.getById=function(c,a){e("/brands/"+c,{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.addresses.create=function(c,a){g("/addresses/",c,function(b){a(null,b.data)},function(b){a(b.errors[0],
-null)})};d.addresses.update=function(c,a,b){n("/addresses/"+c,a,function(a){b(null,a.data)},function(a){b(a.errors[0],null)})};d.addresses["delete"]=function(c,a){k("/addresses/"+c,function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.addresses.list=function(c,a){e("/addresses",c||{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.addresses.getById=function(c,a){e("/addresses/"+c,{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.categories.list=function(c,
-a){e("/categories",c||{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.categories.getById=function(c,a){e("/categories/"+c,{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.currencies.list=function(c,a){e("/currencies",c||{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.currencies.getById=function(c,a){e("/currencies/"+c,{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.orders.create=function(c,a){g("/orders/",c,function(b){a(null,
-b.data)},function(b){a(b.errors[0],null)})};d.orders.list=function(c,a){e("/orders",c||{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.orders.getById=function(c,a){e("/orders/"+c,{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.products.list=function(c,a){e("/products",c||{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.products.getById=function(c,a){e("/products/"+c,{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.shippings.list=
-function(c,a){e("/shippings",c||{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.shippings.getById=function(c,a){e("/shippings/"+c,{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.stores.create=function(c,a){g("/stores/",c,function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.stores.update=function(c,a,b){n("/stores/"+c,a,function(a){b(null,a.data)},function(a){b(a.errors[0],null)})};d.stores["delete"]=function(c,a){k("/stores/"+c,function(b){a(null,
-b.data)},function(b){a(b.errors[0],null)})};d.stores.list=function(c,a){e("/stores",c||{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.stores.getById=function(c,a){e("/stores/"+c,function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.taxes.list=function(c,a){e("/taxes",c||{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.taxes.getById=function(c,a){e("/taxes/"+c,{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.users.create=function(c,
-a){g("/users/",c,function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.users.update=function(c,a,b){n("/users/"+c,a,function(a){b(null,a.data)},function(a){b(a.errors[0],null)})};d.users["delete"]=function(c,a){k("/users/"+c,function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.users.list=function(c,a){e("/users",c||{},function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.users.getById=function(c,a){e("/users/"+c,{},function(b){a(null,b.data)},function(b){a(b.errors[0],
-null)})};d.users.getCurrent=function(c){if(d.token)e("/users/current",{},function(a){c(null,a.data)},function(a){c(a.errors[0],null)});else throw h("Called users.getCurrent without a token"),Error("Cannot get current user information without a user access token. Obtain a user access token first.");};d.users.authenticate=function(c,a,b){d.token=null;d.user=null;g("/users/authenticate",{password:a,email:c},function(a){d.token=a.data.token;d.user=a.data.user;b(null,a.data)},function(a){b(a.errors[0],
-null)})};d.carts.create=function(c,a){var b=null,b=c instanceof Array?{items:c}:c;g("/carts",b,function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};d.carts.add=function(c,a,b){if(a instanceof Array)m("/carts/"+c,[{op:"add",items:a}],function(a){b(null,a.data)},function(a){b(a.errors[0],null)});else throw Error("addToCart(cart_id,data,callback) data must be an array [{product_id :1,quantity : 7}]");};d.carts.remove=function(c,a,b){if(a instanceof Array)m("/carts/"+c,[{op:"remove",items:a}],
-function(a){b(null,a.data)},function(a){b(a.errors[0],null)});else throw Error("removeFromCart(cart_id,data,callback) data must be an array [{product_id :1,product_id : 7}]");};d.carts.update=function(c,a,b){if(a instanceof Array)m("/carts/"+c,[{op:"update",items:a}],function(a){b(null,a.data)},function(a){b(a.errors[0],null)});else throw Error("removeFromCart(cart_id,data,callback) data must be an array [{product_id :1,product_id : 7}]");};d.carts.getById=function(c,a){e("/carts/"+c,{},function(b){a(null,
-b.data)},function(b){a(b.errors[0],null)})};d.carts.getByUser=function(c){if(null===d.user)throw Error("Cannot get current user's cart ca without a user access token. Obtain a user access token first.");e("/users/cart",{},function(a){c(null,a.data)},function(a){c(a.errors[0],null)})};d.carts["delete"]=function(c,a){k("/carts/"+c,function(b){a(null,b.data)},function(b){a(b.errors[0],null)})};q.marketcloud=d})();
+
+
+var request = require('superagent');
+var promise = require('bluebird');
+var crypto = require('crypto');
+
+var API_BASE_URL = 'http://api.marketcloud.it/v0';
+
+var Marketcloud = {}
+
+// Utility
+var isNullOrUndefined = function(v) {
+	return (v === null || 'undefined' === typeof v)
+}
+
+// Client class definition
+Marketcloud.Client =  function(config){
+	this.token = null;
+	this.public_key  = config.public_key;
+	this.secret_key  = config.secret_key;
+
+	// Resources
+	this.products = new Products(this);
+	this.addresses = new Addresses(this);
+	this.brands = new Brands(this);
+	this.categories = new Categories(this);
+	this.contents = new Contents(this);
+	this.orders = new Orders(this);
+	this.shippings = new Shippings(this);
+	this.users = new Users(this);
+
+}
+
+
+Marketcloud.Client.prototype._Get = function(endpoint,query) {
+	var _this = this;
+	
+	var doTheCall = function() {
+	return new Promise(function(resolve,reject){
+			request
+			.get(API_BASE_URL+endpoint)
+			.set('Authorization',_this.getAuthorizationHeader())
+			.query(query || {})
+			.end(function(err,response){
+				if (err)
+					reject(response)
+				else
+					resolve(response)
+			})
+		})
+	}
+
+	if (this.secret_key !== null && isNullOrUndefined(this.token)){
+		return this.authenticate()
+			.then(function(response){
+				return doTheCall()
+			});
+	} else {
+		return doTheCall()
+	}
+}
+Marketcloud.Client.prototype._Post = function(endpoint,data,options) {
+	var _this = this;
+
+	
+	var doTheCall = function() {
+	return new Promise(function(resolve,reject){
+			request
+			.post(API_BASE_URL+endpoint)
+			.set('Authorization',_this.getAuthorizationHeader())
+			.send(data || {})
+			.end(function(err,response){
+				if (err)
+					reject(response)
+				else
+					resolve(response)
+			})
+		})
+	}
+
+	if (this.secret_key !== null && isNullOrUndefined(this.token)){
+		return this.authenticate()
+			.then(function(response){
+				return doTheCall()
+			});
+	} else {
+		return doTheCall()
+	}
+}
+Marketcloud.Client.prototype._Put = function(endpoint,data) {
+	var _this = this;
+	var doTheCall = function() {
+	return new Promise(function(resolve,reject){
+			request
+			.put(API_BASE_URL+endpoint)
+			.set('Authorization',_this.getAuthorizationHeader())
+			.send(data || {})
+			.end(function(err,response){
+				if (err || !response.ok)
+					reject(response)
+				else
+					resolve(response)
+			})
+		})
+	}
+
+	if (this.secret_key !== null && isNullOrUndefined(this.token)){
+		return this.authenticate()
+			.then(function(response){
+				return doTheCall()
+			});
+	} else {
+		return doTheCall()
+	}
+}
+Marketcloud.Client.prototype._Patch = function(endpoint,data) {
+	var _this = this;
+	var doTheCall = function() {
+		return new Promise(function(resolve,reject){
+				request
+				.patch(API_BASE_URL+endpoint)
+				.set('Authorization',_this.getAuthorizationHeader())
+				.send(data || {})
+				.end(function(err,response){
+					if (err)
+						reject(response)
+					else
+						resolve(response)
+				})
+			})
+	}
+
+	if (this.secret_key !== null && this.token === null){
+		return this.authenticate()
+			.then(function(response){
+				return doTheCall()
+			});
+	} else {
+		return doTheCall()
+	}
+}
+Marketcloud.Client.prototype._Delete = function(endpoint) {
+	var _this = this;
+	
+
+	var doTheCall = function(){
+		return new Promise(function(resolve,reject){
+				request
+				.del(API_BASE_URL+endpoint)
+				.set('Authorization',_this.getAuthorizationHeader())
+				.end(function(err,response){
+					if (err)
+						reject(response)
+					else
+						resolve(response)
+				})
+		})
+	}
+
+	if (this.secret_key !== null && this.token === null){
+		return this.authenticate()
+			.then(function(response){
+				return doTheCall()
+			});
+	} else {
+		return doTheCall()
+	}
+}
+
+
+
+
+Marketcloud.Client.prototype.getAuthorizationHeader = function() {
+	if (this.token) 
+		return this.public_key+':'+this.token
+	else 
+		return this.public_key
+	
+}
+
+
+Marketcloud.Client.prototype.authenticate = function() {
+
+	var now = Date.now();
+	var h = ""+this.secret_key+now;
+	var hash = crypto.createHash('sha256')
+		  	  		 .update(h)
+		      		 .digest('base64');
+
+	var that = this;
+	var payload = {
+		publicKey : that.public_key,
+		secretKey : hash,
+		timestamp : now
+	}
+	return new Promise(function(resolve,reject){
+		request
+			.post(API_BASE_URL+'/tokens')
+			.set('Authorization',that.getAuthorizationHeader())
+			.send(payload)
+			.end(function(err,response){
+				if (err)
+					reject(response)
+				else{
+					that.token = response.body.token
+					resolve(response)
+				}
+			})
+	})
+	
+
+
+}
+
+Addresses = (function(){
+	function Addresses(master) {
+		this.master = master;
+	}
+
+	Addresses.prototype.list = function(query) {
+		return this.master._Get('/addresses',query);
+	}
+
+	Addresses.prototype.getById = function(id) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Get('/addresses/'+id,{});
+	}
+
+	Addresses.prototype.create = function(data) {
+		return this.master._Post('/addresses',data)
+	}
+
+	Addresses.prototype.update = function(id,data) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Put('/addresses/'+id,data)
+	}
+
+	Addresses.prototype.delete = function(id) {
+		return this.master._Delete('/addresses/'+id)
+	}
+
+	return Addresses;
+
+})();
+Brands = (function(){
+	function Brands(master) {
+		this.master = master;
+	}
+
+	Brands.prototype.list = function(query) {
+		return this.master._Get('/brands',query);
+	}
+
+	Brands.prototype.getById = function(id) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Get('/brands/'+id,{});
+	}
+
+	Brands.prototype.create = function(data) {
+		return this.master._Post('/brands',data)
+	}
+
+	Brands.prototype.update = function(id,data) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Put('/brands/'+id,data)
+	}
+
+	Brands.prototype.delete = function(id) {
+		return this.master._Delete('/brands/'+id)
+	}
+
+	return Brands;
+
+})();
+
+
+
+Categories = (function(){
+	function Categories(master) {
+		this.master = master;
+	}
+
+	Categories.prototype.list = function(query) {
+		return this.master._Get('/categories',query);
+	}
+
+	Categories.prototype.getById = function(id) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Get('/categories/'+id,{});
+	}
+
+	Categories.prototype.create = function(data) {
+		return this.master._Post('/categories',data)
+	}
+
+	Categories.prototype.update = function(id,data) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Put('/categories/'+id,data)
+	}
+
+	Categories.prototype.delete = function(id) {
+		return this.master._Delete('/categories/'+id)
+	}
+
+	return Categories;
+
+})();
+Contents = (function(){
+	function Contents(master) {
+		this.master = master;
+	}
+
+	Contents.prototype.list = function(query) {
+		return this.master._Get('/contents',query);
+	}
+
+	Contents.prototype.getById = function(id) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Get('/contents/'+id,{});
+	}
+
+	Contents.prototype.create = function(data) {
+		return this.master._Post('/contents',data)
+	}
+
+	Contents.prototype.update = function(id,data) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Put('/contents/'+id,data)
+	}
+
+	Contents.prototype.delete = function(id) {
+		return this.master._Delete('/contents/'+id)
+	}
+
+	return Contents;
+
+})();
+
+
+Orders = (function(){
+	function Orders(master) {
+		this.master = master;
+	}
+
+	Orders.prototype.list = function(query) {
+		return this.master._Get('/orders',query);
+	}
+
+	Orders.prototype.getById = function(id) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Get('/orders/'+id,{});
+	}
+
+	Orders.prototype.create = function(data) {
+		return this.master._Post('/orders',data)
+	}
+
+	Orders.prototype.update = function(id,data) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Put('/orders/'+id,data)
+	}
+
+	Orders.prototype.delete = function(id) {
+		return this.master._Delete('/orders/'+id)
+	}
+
+	return Orders;
+
+})();
+
+
+Products = (function(){
+	function Products(master) {
+		this.master = master;
+	}
+
+	Products.prototype.list = function(query) {
+		return this.master._Get('/products',query);
+	}
+
+	Products.prototype.getById = function(id) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Get('/products/'+id,{});
+	}
+
+	Products.prototype.create = function(data) {
+		return this.master._Post('/products',data)
+	}
+
+	Products.prototype.update = function(id,data) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Put('/products/'+id,data)
+	}
+
+	Products.prototype.delete = function(id) {
+		return this.master._Delete('/products/'+id)
+	}
+
+	return Products;
+
+})();
+
+Shippings = (function(){
+	function Shippings(master) {
+		this.master = master;
+	}
+
+	Shippings.prototype.list = function(query) {
+		return this.master._Get('/shippings',query);
+	}
+
+	Shippings.prototype.getById = function(id) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Get('/shippings/'+id,{});
+	}
+
+	Shippings.prototype.create = function(data) {
+		return this.master._Post('/shippings',data)
+	}
+
+	Shippings.prototype.update = function(id,data) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Put('/shippings/'+id,data)
+	}
+
+	Shippings.prototype.delete = function(id) {
+		return this.master._Delete('/shippings/'+id)
+	}
+
+	return Shippings;
+
+})();
+
+
+
+
+Users = (function(){
+	function Users(master) {
+		this.master = master;
+	}
+
+	Users.prototype.list = function(query) {
+		return this.master._Get('/users',query);
+	}
+
+	Users.prototype.getById = function(id) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Get('/users/'+id,{});
+	}
+
+	Users.prototype.create = function(data) {
+		return this.master._Post('/users',data)
+	}
+
+	Users.prototype.update = function(id,data) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Put('/users/'+id,data)
+	}
+
+	Users.prototype.authenticate = function(email,password) {
+		var payload = {
+			email : email,
+			password : password
+		}
+		return this.master._Post('/users/authenticate',payload);
+	}
+
+	Users.prototype.delete = function(id) {
+		return this.master._Delete('/users/'+id)
+	}
+
+	return Users;
+
+})();
+
+
+
+Marketcloud.Promise = promise;
+
+module.exports = Marketcloud;
