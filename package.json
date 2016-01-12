@@ -1,0 +1,29 @@
+{
+  "name": "marketcloud-node",
+  "version": "1.0.0",
+  "description": "Marketcloud NodeJS sdk",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Marketcloud/marketcloud-node.git"
+  },
+  "keywords": [
+    "ecommerce",
+    "api",
+    "nodejs",
+    "backend"
+  ],
+  "author": "Marketcloud.it",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Marketcloud/marketcloud-node/issues"
+  },
+  "homepage": "https://github.com/Marketcloud/marketcloud-node#readme",
+  "dependencies": {
+    "bluebird": "^3.1.1",
+    "superagent": "^1.6.1"
+  }
+}
