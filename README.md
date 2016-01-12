@@ -1,4 +1,4 @@
-# node-marketcloud
+# marketcloud-node
 Marketcloud nodejs client library
 
 ```javascript
