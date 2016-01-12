@@ -4,30 +4,34 @@ Marketcloud nodejs client library
 ```javascript
 var Marketcloud = require('marketcloud');
 var mc = new Marketcloud.Client({
-   publicKey : 'your-public-key-here',
-   secretKey : 'your-secret-key-here'
+   public_key : 'your-public-key-here',
+   secret_key : 'your-secret-key-here'
 })
 
-var products = mc.products.search({
-  q : "A song of fire and ice",
-  price : {
-    $lt : 20,00 ,
-    currency : "EUR"
-    }
-  })
+var product = {
+			name : 'Sandman #3',
+			price : 9.99,
+			stock_type : 'track',
+			stock_level : 10,
+			author : 'Neil Gaiman',
+			publisher : 'Vertigo',
+			images : ['https://nothingbutcomics.files.wordpress.com/2013/10/sndm-cv1-cbldf-bw-var-4c717.jpg']
+		}
+mc.products.create(product)
+	.then(function(response){
+		var product_id = response.body.data.id
+		expect(response.status).to.equal(200)
+	})
   
-var cart = mc.cart.getById(11)
+var prod = mc.products.getById(PRODUCT_ID);
 
-cart.add([
-   {
-      id : products[0],
-      quantity : 1
-    }
-]);
+
 
 var config = {
    billing : {...},
-   shipping : {...}
+   shipping : {...},
+   items : [{product_id:prod.id,quantity:1}]
 }
-cart.checkout(config)
+
+mc.orders.create(config);
 ```
