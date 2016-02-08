@@ -13,6 +13,7 @@ var request = require('superagent');
 var promise = require('bluebird');
 var crypto = require('crypto');
 
+
 var API_BASE_URL = 'http://api.marketcloud.it/v0';
 
 var Marketcloud = {}
@@ -24,6 +25,7 @@ var isNullOrUndefined = function(v) {
 
 // Client class definition
 Marketcloud.Client =  function(config){
+
 	this.token = null;
 	this.public_key  = config.public_key;
 	this.secret_key  = config.secret_key;
@@ -32,10 +34,18 @@ Marketcloud.Client =  function(config){
 	this.products = new Products(this);
 	this.addresses = new Addresses(this);
 	this.brands = new Brands(this);
+	this.carts = new Carts(this);
 	this.categories = new Categories(this);
 	this.contents = new Contents(this);
+	//this.discounts = new Discounts(this); TODO
 	this.orders = new Orders(this);
+	//this.payments = new Payments(this);
+	//this.paymentmethods = new PaymentMethods(this)
+	this.products = new Products(this);
 	this.shippings = new Shippings(this);
+	//this.shipment = new Shipment(this); TODO
+	//this.stores = new Stores(this); TODO
+	//this.taxes = new Stores(this); TODO
 	this.users = new Users(this);
 
 }
@@ -52,9 +62,9 @@ Marketcloud.Client.prototype._Get = function(endpoint,query) {
 			.query(query || {})
 			.end(function(err,response){
 				if (err)
-					reject(response)
+					reject(response.body)
 				else
-					resolve(response)
+					resolve(response.body)
 			})
 		})
 	}
@@ -80,9 +90,9 @@ Marketcloud.Client.prototype._Post = function(endpoint,data,options) {
 			.send(data || {})
 			.end(function(err,response){
 				if (err)
-					reject(response)
+					reject(response.body)
 				else
-					resolve(response)
+					resolve(response.body)
 			})
 		})
 	}
@@ -106,9 +116,9 @@ Marketcloud.Client.prototype._Put = function(endpoint,data) {
 			.send(data || {})
 			.end(function(err,response){
 				if (err || !response.ok)
-					reject(response)
+					reject(response.body)
 				else
-					resolve(response)
+					resolve(response.body)
 			})
 		})
 	}
@@ -132,9 +142,9 @@ Marketcloud.Client.prototype._Patch = function(endpoint,data) {
 				.send(data || {})
 				.end(function(err,response){
 					if (err)
-						reject(response)
+						reject(response.body)
 					else
-						resolve(response)
+						resolve(response.body)
 				})
 			})
 	}
@@ -159,9 +169,9 @@ Marketcloud.Client.prototype._Delete = function(endpoint) {
 				.set('Authorization',_this.getAuthorizationHeader())
 				.end(function(err,response){
 					if (err)
-						reject(response)
+						reject(response.body)
 					else
-						resolve(response)
+						resolve(response.body)
 				})
 		})
 	}
@@ -209,10 +219,10 @@ Marketcloud.Client.prototype.authenticate = function() {
 			.send(payload)
 			.end(function(err,response){
 				if (err)
-					reject(response)
+					reject(response.body)
 				else{
 					that.token = response.body.token
-					resolve(response)
+					resolve(response.body)
 				}
 			})
 	})
@@ -287,6 +297,75 @@ Brands = (function(){
 })();
 
 
+Carts = (function(){
+	function Carts(master) {
+		this.master = master;
+	}
+
+	Carts.prototype.list = function(query) {
+		return this.master._Get('/carts',query);
+	}
+
+	Carts.prototype.getById = function(id) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Get('/carts/'+id,{});
+	}
+
+	Carts.prototype.create = function(data) {
+		return this.master._Post('/carts',data)
+	}
+
+	Carts.prototype.add = function(id,items) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.');
+
+		if (!(items instanceof Array))
+			throw new Error('items must be an array of line items');
+		var payload = {
+			op : "add",
+			items : items
+		}
+		return this.master._Patch('/carts/'+id,payload)
+	}
+
+	Carts.prototype.remove = function(id,items) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+
+		if (!(items instanceof Array))
+			throw new Error('items must be an array of line items')
+
+
+		var payload = {
+			op : "remove",
+			items : items
+		}
+		return this.master._Patch('/carts/'+id,payload)
+	}
+
+	Carts.prototype.update = function(id,items) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+
+		if (!(items instanceof Array))
+			throw new Error('items must be an array of line items')
+
+
+		var payload = {
+			op : "update",
+			items : items
+		}
+		return this.master._Patch('/carts/'+id,payload)
+	}
+
+	Carts.prototype.delete = function(id) {
+		return this.master._Delete('/carts/'+id)
+	}
+
+	return Carts;
+
+})();
 
 Categories = (function(){
 	function Categories(master) {
@@ -311,6 +390,12 @@ Categories = (function(){
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
 		return this.master._Put('/categories/'+id,data)
+	}
+
+	Categories.prototype.patch = function(id,data) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Patch('/categories/'+id,data)
 	}
 
 	Categories.prototype.delete = function(id) {
@@ -370,6 +455,20 @@ Orders = (function(){
 	}
 
 	Orders.prototype.create = function(data) {
+		/**
+		 * {
+		 * 	shipping_address_id 	: Int,
+		 * 	billing_address_id 		: Int,
+		 * 	user_id					: Int, //Optional
+		 * 	items					: Array<LineItem>,
+		 * 	state					: String in Enum, //Optional, defaults to 'created'
+		 * 	payment					: Object
+		 * }
+		 */
+		
+		/*
+		*/
+		 
 		return this.master._Post('/orders',data)
 	}
 
@@ -411,6 +510,12 @@ Products = (function(){
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
 		return this.master._Put('/products/'+id,data)
+	}
+
+	Products.prototype.patch = function(id,data) {
+		if (isNaN(id))
+			throw new Error('id must be an integer.')
+		return this.master._Patch('/products/'+id,data)
 	}
 
 	Products.prototype.delete = function(id) {
@@ -481,6 +586,11 @@ Users = (function(){
 			throw new Error('id must be an integer.')
 		return this.master._Put('/users/'+id,data)
 	}
+	Users.prototype.patch = function(id,data) {
+			if (isNaN(id))
+				throw new Error('id must be an integer.')
+			return this.master._Patch('/users/'+id,data)
+		}
 
 	Users.prototype.authenticate = function(email,password) {
 		var payload = {
