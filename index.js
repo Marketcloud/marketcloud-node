@@ -61,8 +61,12 @@ Marketcloud.Client.prototype._Get = function(endpoint,query) {
 			.set('Authorization',_this.getAuthorizationHeader())
 			.query(query || {})
 			.end(function(err,response){
-				if (err)
-					reject(response.body)
+				if (err){
+					if (response)
+						reject(response.body)
+					else
+						reject(null,err)
+				}
 				else
 					resolve(response.body)
 			})
@@ -89,8 +93,12 @@ Marketcloud.Client.prototype._Post = function(endpoint,data,options) {
 			.set('Authorization',_this.getAuthorizationHeader())
 			.send(data || {})
 			.end(function(err,response){
-				if (err)
-					reject(response.body)
+				if (err){
+					if (response)
+						reject(response.body)
+					else
+						reject(null,err)
+				}
 				else
 					resolve(response.body)
 			})
@@ -115,8 +123,12 @@ Marketcloud.Client.prototype._Put = function(endpoint,data) {
 			.set('Authorization',_this.getAuthorizationHeader())
 			.send(data || {})
 			.end(function(err,response){
-				if (err || !response.ok)
-					reject(response.body)
+				if (err){
+					if (response)
+						reject(response.body)
+					else
+						reject(null,err)
+				}
 				else
 					resolve(response.body)
 			})
@@ -141,8 +153,12 @@ Marketcloud.Client.prototype._Patch = function(endpoint,data) {
 				.set('Authorization',_this.getAuthorizationHeader())
 				.send(data || {})
 				.end(function(err,response){
-					if (err)
+					if (err){
+					if (response)
 						reject(response.body)
+					else
+						reject(null,err)
+				}
 					else
 						resolve(response.body)
 				})
@@ -168,8 +184,12 @@ Marketcloud.Client.prototype._Delete = function(endpoint) {
 				.del(API_BASE_URL+endpoint)
 				.set('Authorization',_this.getAuthorizationHeader())
 				.end(function(err,response){
-					if (err)
+					if (err){
+					if (response)
 						reject(response.body)
+					else
+						reject(null,err)
+				}
 					else
 						resolve(response.body)
 				})
@@ -218,8 +238,12 @@ Marketcloud.Client.prototype.authenticate = function() {
 			.set('Authorization',that.getAuthorizationHeader())
 			.send(payload)
 			.end(function(err,response){
-				if (err)
-					reject(response.body)
+				if (err){
+					if (response)
+						reject(response.body)
+					else
+						reject(null,err)
+				}
 				else{
 					that.token = response.body.token
 					resolve(response.body)
