@@ -274,10 +274,14 @@ Addresses = (function(){
 		return this.master._Post('/addresses',data)
 	}
 
-	Addresses.prototype.update = function(id,data) {
+	Addresses.prototype.update = function(id,data,replace) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Put('/addresses/'+id,data)
+		
+		if (true === replace)
+			return this.master._Put('/categories/'+id,data)
+		else
+			return this.master._Patch('/categories/'+id,data)
 	}
 
 	Addresses.prototype.delete = function(id) {
@@ -306,10 +310,13 @@ Brands = (function(){
 		return this.master._Post('/brands',data)
 	}
 
-	Brands.prototype.update = function(id,data) {
+	Brands.prototype.update = function(id,data,replace) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Put('/brands/'+id,data)
+		if (true === replace)
+			return this.master._Put('/categories/'+id,data)
+		else
+			return this.master._Patch('/categories/'+id,data)
 	}
 
 	Brands.prototype.delete = function(id) {
@@ -410,10 +417,13 @@ Categories = (function(){
 		return this.master._Post('/categories',data)
 	}
 
-	Categories.prototype.update = function(id,data) {
+	Categories.prototype.update = function(id,data,replace) {
 		if (isNaN(id))
-			throw new Error('id must be an integer.')
-		return this.master._Put('/categories/'+id,data)
+			throw new Error('id must be an integer.');
+		if (true === replace)
+			return this.master._Put('/categories/'+id,data)
+		else
+			return this.master._Patch('/categories/'+id,data)
 	}
 
 	Categories.prototype.patch = function(id,data) {
@@ -448,10 +458,14 @@ Contents = (function(){
 		return this.master._Post('/contents',data)
 	}
 
-	Contents.prototype.update = function(id,data) {
+	Contents.prototype.update = function(id,data,replace) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Put('/contents/'+id,data)
+
+		if (true === replace)
+			return this.master._Put('/categories/'+id,data)
+		else
+			return this.master._Patch('/categories/'+id,data)
 	}
 
 	Contents.prototype.delete = function(id) {
@@ -478,28 +492,18 @@ Orders = (function(){
 		return this.master._Get('/orders/'+id,{});
 	}
 
-	Orders.prototype.create = function(data) {
-		/**
-		 * {
-		 * 	shipping_address_id 	: Int,
-		 * 	billing_address_id 		: Int,
-		 * 	user_id					: Int, //Optional
-		 * 	items					: Array<LineItem>,
-		 * 	state					: String in Enum, //Optional, defaults to 'created'
-		 * 	payment					: Object
-		 * }
-		 */
-		
-		/*
-		*/
-		 
+	Orders.prototype.create = function(data) {		 
 		return this.master._Post('/orders',data)
 	}
 
-	Orders.prototype.update = function(id,data) {
+	Orders.prototype.update = function(id,data,replace) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Put('/orders/'+id,data)
+
+		if (true === replace)
+			return this.master._Put('/categories/'+id,data)
+		else
+			return this.master._Patch('/categories/'+id,data)
 	}
 
 	Orders.prototype.delete = function(id) {
@@ -530,10 +534,13 @@ Products = (function(){
 		return this.master._Post('/products',data)
 	}
 
-	Products.prototype.update = function(id,data) {
+	Products.prototype.update = function(id,data,replace) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Put('/products/'+id,data)
+		if (true === replace)
+			return this.master._Put('/categories/'+id,data)
+		else
+			return this.master._Patch('/categories/'+id,data)
 	}
 
 	Products.prototype.patch = function(id,data) {
@@ -569,10 +576,14 @@ Shippings = (function(){
 		return this.master._Post('/shippings',data)
 	}
 
-	Shippings.prototype.update = function(id,data) {
+	Shippings.prototype.update = function(id,data,replace) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Put('/shippings/'+id,data)
+
+		if (true === replace)
+			return this.master._Put('/categories/'+id,data)
+		else
+			return this.master._Patch('/categories/'+id,data)
 	}
 
 	Shippings.prototype.delete = function(id) {
@@ -605,10 +616,13 @@ Users = (function(){
 		return this.master._Post('/users',data)
 	}
 
-	Users.prototype.update = function(id,data) {
+	Users.prototype.update = function(id,data,replace) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Put('/users/'+id,data)
+		if (true === replace)
+			return this.master._Put('/categories/'+id,data)
+		else
+			return this.master._Patch('/categories/'+id,data)
 	}
 	Users.prototype.patch = function(id,data) {
 			if (isNaN(id))

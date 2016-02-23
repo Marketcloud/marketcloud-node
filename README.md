@@ -27,11 +27,11 @@ var prod = mc.products.getById(PRODUCT_ID);
 
 
 
-var config = {
-   billing : {...},
-   shipping : {...},
-   items : [{product_id:prod.id,quantity:1}]
+var new_order = {
+   billing_address : {...},
+   shipping_address : {...},
+   items : [{product_id:1, variant_id : 1,quantity:1}]
 }
 
-mc.orders.create(config);
+mc.orders.create(new_order);
 ```
