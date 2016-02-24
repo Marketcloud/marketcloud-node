@@ -17,20 +17,25 @@ var product = {
 			publisher : 'Vertigo',
 			images : ['https://nothingbutcomics.files.wordpress.com/2013/10/sndm-cv1-cbldf-bw-var-4c717.jpg']
 		}
+//Save the product
 mc.products.create(product)
 	.then(function(response){
 		var product_id = response.body.data.id
 		expect(response.status).to.equal(200)
 	})
-  
-var prod = mc.products.getById(PRODUCT_ID);
+//Retrieve a particular product
+mc.products.getById(PRODUCT_ID)
+.then(function(product){
+     
+});
 
 
 
+// Create an order
 var new_order = {
    billing_address : {...},
    shipping_address : {...},
-   items : [{product_id:prod.id, variant_id : prod.variants[2].variant_id,quantity:1}]
+   items : [{product_id:1, variant_id : 1,quantity:1}]
 }
 
 mc.orders.create(new_order);
