@@ -1,12 +1,12 @@
 /*
-*	Marketcloud NodeJS SDK
-*   http://www.marketcloud.it
-*
-*	Copyright (c) 2016 Herapi SRLS
-*
-*	For informations info@marketcloud.it
-*
-*/
+ *	Marketcloud NodeJS SDK
+ *   http://www.marketcloud.it
+ *
+ *	Copyright (c) 2016 Herapi SRLS
+ *
+ *	For informations info@marketcloud.it
+ *
+ */
 
 
 var request = require('superagent');
@@ -24,11 +24,11 @@ var isNullOrUndefined = function(v) {
 }
 
 // Client class definition
-Marketcloud.Client =  function(config){
+Marketcloud.Client = function(config) {
 
 	this.token = null;
-	this.public_key  = config.public_key;
-	this.secret_key  = config.secret_key;
+	this.public_key = config.public_key;
+	this.secret_key = config.secret_key;
 
 	// Resources
 	this.products = new Products(this);
@@ -51,123 +51,120 @@ Marketcloud.Client =  function(config){
 }
 
 
-Marketcloud.Client.prototype._Get = function(endpoint,query) {
+Marketcloud.Client.prototype._Get = function(endpoint, query) {
 	var _this = this;
-	
+
 	var doTheCall = function() {
-	return new Promise(function(resolve,reject){
+		return new Promise(function(resolve, reject) {
 			request
-			.get(API_BASE_URL+endpoint)
-			.set('Authorization',_this.getAuthorizationHeader())
-			.query(query || {})
-			.end(function(err,response){
-				if (err){
-					if (response)
-						reject(response.body)
-					else
-						reject(null,err)
-				}
-				else
-					resolve(response.body)
-			})
-		})
-	}
-
-	if (this.secret_key !== null && isNullOrUndefined(this.token)){
-		return this.authenticate()
-			.then(function(response){
-				return doTheCall()
-			});
-	} else {
-		return doTheCall()
-	}
-}
-Marketcloud.Client.prototype._Post = function(endpoint,data,options) {
-	var _this = this;
-
-	
-	var doTheCall = function() {
-	return new Promise(function(resolve,reject){
-			request
-			.post(API_BASE_URL+endpoint)
-			.set('Authorization',_this.getAuthorizationHeader())
-			.send(data || {})
-			.end(function(err,response){
-				if (err){
-					if (response)
-						reject(response.body)
-					else
-						reject(null,err)
-				}
-				else
-					resolve(response.body)
-			})
-		})
-	}
-
-	if (this.secret_key !== null && isNullOrUndefined(this.token)){
-		return this.authenticate()
-			.then(function(response){
-				return doTheCall()
-			});
-	} else {
-		return doTheCall()
-	}
-}
-Marketcloud.Client.prototype._Put = function(endpoint,data) {
-	var _this = this;
-	var doTheCall = function() {
-	return new Promise(function(resolve,reject){
-			request
-			.put(API_BASE_URL+endpoint)
-			.set('Authorization',_this.getAuthorizationHeader())
-			.send(data || {})
-			.end(function(err,response){
-				if (err){
-					if (response)
-						reject(response.body)
-					else
-						reject(null,err)
-				}
-				else
-					resolve(response.body)
-			})
-		})
-	}
-
-	if (this.secret_key !== null && isNullOrUndefined(this.token)){
-		return this.authenticate()
-			.then(function(response){
-				return doTheCall()
-			});
-	} else {
-		return doTheCall()
-	}
-}
-Marketcloud.Client.prototype._Patch = function(endpoint,data) {
-	var _this = this;
-	var doTheCall = function() {
-		return new Promise(function(resolve,reject){
-				request
-				.patch(API_BASE_URL+endpoint)
-				.set('Authorization',_this.getAuthorizationHeader())
-				.send(data || {})
-				.end(function(err,response){
-					if (err){
-					if (response)
-						reject(response.body)
-					else
-						reject(null,err)
-				}
-					else
-						resolve(response.body)
+				.get(API_BASE_URL + endpoint)
+				.set('Authorization', _this.getAuthorizationHeader())
+				.query(query || {})
+				.end(function(err, response) {
+					if (err) {
+						if (response && response.body)
+							reject(response.body.errors[0])
+						else
+							reject(null, err)
+					} else
+						resolve(response.body.data)
 				})
-			})
+		})
 	}
 
-	if (this.secret_key !== null && this.token === null){
+	if (this.secret_key !== null && isNullOrUndefined(this.token)) {
 		return this.authenticate()
-			.then(function(response){
+			.then(function(response) {
+				return doTheCall()
+			});
+	} else {
+		return doTheCall()
+	}
+}
+Marketcloud.Client.prototype._Post = function(endpoint, data, options) {
+	var _this = this;
+
+
+	var doTheCall = function() {
+		return new Promise(function(resolve, reject) {
+			request
+				.post(API_BASE_URL + endpoint)
+				.set('Authorization', _this.getAuthorizationHeader())
+				.send(data || {})
+				.end(function(err, response) {
+					if (err) {
+						if (response)
+							reject(response.body.errors[0])
+						else
+							reject(null, err)
+					} else
+						resolve(response.body.data)
+				})
+		})
+	}
+
+	if (this.secret_key !== null && isNullOrUndefined(this.token)) {
+		return this.authenticate()
+			.then(function(response) {
+				return doTheCall()
+			});
+	} else {
+		return doTheCall()
+	}
+}
+Marketcloud.Client.prototype._Put = function(endpoint, data) {
+	var _this = this;
+	var doTheCall = function() {
+		return new Promise(function(resolve, reject) {
+			request
+				.put(API_BASE_URL + endpoint)
+				.set('Authorization', _this.getAuthorizationHeader())
+				.send(data || {})
+				.end(function(err, response) {
+					if (err) {
+						if (response)
+							reject(response.body.errors[0])
+						else
+							reject(null, err)
+					} else
+						resolve(response.body.data)
+				})
+		})
+	}
+
+	if (this.secret_key !== null && isNullOrUndefined(this.token)) {
+		return this.authenticate()
+			.then(function(response) {
+				return doTheCall()
+			});
+	} else {
+		return doTheCall()
+	}
+}
+Marketcloud.Client.prototype._Patch = function(endpoint, data) {
+	var _this = this;
+	var doTheCall = function() {
+		return new Promise(function(resolve, reject) {
+			request
+				.patch(API_BASE_URL + endpoint)
+				.set('Authorization', _this.getAuthorizationHeader())
+				.send(data || {})
+				.end(function(err, response) {
+					if (err) {
+						if (response) {
+							console.log(response.body)
+							reject(response.body.errors[0])
+						} else
+							reject(null, err)
+					} else
+						resolve(response.body.data)
+				})
+		})
+	}
+
+	if (this.secret_key !== null && this.token === null) {
+		return this.authenticate()
+			.then(function(response) {
 				return doTheCall()
 			});
 	} else {
@@ -176,29 +173,28 @@ Marketcloud.Client.prototype._Patch = function(endpoint,data) {
 }
 Marketcloud.Client.prototype._Delete = function(endpoint) {
 	var _this = this;
-	
 
-	var doTheCall = function(){
-		return new Promise(function(resolve,reject){
-				request
-				.del(API_BASE_URL+endpoint)
-				.set('Authorization',_this.getAuthorizationHeader())
-				.end(function(err,response){
-					if (err){
-					if (response)
-						reject(response.body)
-					else
-						reject(null,err)
-				}
-					else
-						resolve(response.body)
+
+	var doTheCall = function() {
+		return new Promise(function(resolve, reject) {
+			request
+				.del(API_BASE_URL + endpoint)
+				.set('Authorization', _this.getAuthorizationHeader())
+				.end(function(err, response) {
+					if (err) {
+						if (response)
+							reject(response.body.errors[0])
+						else
+							reject(null, err)
+					} else
+						resolve(response.body.data)
 				})
 		})
 	}
 
-	if (this.secret_key !== null && this.token === null){
+	if (this.secret_key !== null && this.token === null) {
 		return this.authenticate()
-			.then(function(response){
+			.then(function(response) {
 				return doTheCall()
 			});
 	} else {
@@ -208,119 +204,114 @@ Marketcloud.Client.prototype._Delete = function(endpoint) {
 
 
 
-
 Marketcloud.Client.prototype.getAuthorizationHeader = function() {
-	if (this.token) 
-		return this.public_key+':'+this.token
-	else 
+	if (this.token)
+		return this.public_key + ':' + this.token
+	else
 		return this.public_key
-	
+
 }
 
 
 Marketcloud.Client.prototype.authenticate = function() {
 
 	var now = Date.now();
-	var h = ""+this.secret_key+now;
+	var h = "" + this.secret_key + now;
 	var hash = crypto.createHash('sha256')
-		  	  		 .update(h)
-		      		 .digest('base64');
+		.update(h)
+		.digest('base64');
 
 	var that = this;
 	var payload = {
-		publicKey : that.public_key,
-		secretKey : hash,
-		timestamp : now
+		publicKey: that.public_key,
+		secretKey: hash,
+		timestamp: now
 	}
-	return new Promise(function(resolve,reject){
+	return new Promise(function(resolve, reject) {
 		request
-			.post(API_BASE_URL+'/tokens')
-			.set('Authorization',that.getAuthorizationHeader())
+			.post(API_BASE_URL + '/tokens')
+			.set('Authorization', that.getAuthorizationHeader())
 			.send(payload)
-			.end(function(err,response){
-				if (err){
+			.end(function(err, response) {
+				if (err) {
 					if (response)
-						reject(response.body)
+						reject(response.body.errors[0])
 					else
-						reject(null,err)
-				}
-				else{
+						reject(null, err)
+				} else {
 					that.token = response.body.token
-					resolve(response.body)
+					resolve(response.body.data)
 				}
 			})
 	})
-	
+
 
 
 }
 
-Addresses = (function(){
+Addresses = (function() {
 	function Addresses(master) {
 		this.master = master;
 	}
 
 	Addresses.prototype.list = function(query) {
-		return this.master._Get('/addresses',query);
+		return this.master._Get('/addresses', query);
 	}
 
 	Addresses.prototype.getById = function(id) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Get('/addresses/'+id,{});
+		return this.master._Get('/addresses/' + id, {});
 	}
 
 	Addresses.prototype.create = function(data) {
-		return this.master._Post('/addresses',data)
+		return this.master._Post('/addresses', data)
 	}
 
-	Addresses.prototype.update = function(id,data,replace) {
+	Addresses.prototype.update = function(id, data) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		
-		if (true === replace)
-			return this.master._Put('/categories/'+id,data)
-		else
-			return this.master._Patch('/categories/'+id,data)
+
+		return this.master._Put('/addresses/' + id, data)
+
 	}
 
 	Addresses.prototype.delete = function(id) {
-		return this.master._Delete('/addresses/'+id)
+		return this.master._Delete('/addresses/' + id)
 	}
 
 	return Addresses;
 
 })();
-Brands = (function(){
+Brands = (function() {
 	function Brands(master) {
 		this.master = master;
 	}
 
 	Brands.prototype.list = function(query) {
-		return this.master._Get('/brands',query);
+		return this.master._Get('/brands', query);
 	}
 
 	Brands.prototype.getById = function(id) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Get('/brands/'+id,{});
+		return this.master._Get('/brands/' + id, {});
 	}
 
 	Brands.prototype.create = function(data) {
-		return this.master._Post('/brands',data)
+		return this.master._Post('/brands', data)
 	}
 
-	Brands.prototype.update = function(id,data,replace) {
+	Brands.prototype.update = function(id, data) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		if (true === replace)
-			return this.master._Put('/categories/'+id,data)
-		else
-			return this.master._Patch('/categories/'+id,data)
+
+		return this.master._Put('/brands/' + id, data)
+
 	}
 
 	Brands.prototype.delete = function(id) {
-		return this.master._Delete('/brands/'+id)
+		return this.master._Delete('/brands/' + id)
 	}
 
 	return Brands;
@@ -328,39 +319,39 @@ Brands = (function(){
 })();
 
 
-Carts = (function(){
+Carts = (function() {
 	function Carts(master) {
 		this.master = master;
 	}
 
 	Carts.prototype.list = function(query) {
-		return this.master._Get('/carts',query);
+		return this.master._Get('/carts', query);
 	}
 
 	Carts.prototype.getById = function(id) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Get('/carts/'+id,{});
+		return this.master._Get('/carts/' + id, {});
 	}
 
 	Carts.prototype.create = function(data) {
-		return this.master._Post('/carts',data)
+		return this.master._Post('/carts', data)
 	}
 
-	Carts.prototype.add = function(id,items) {
+	Carts.prototype.add = function(id, items) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.');
 
 		if (!(items instanceof Array))
 			throw new Error('items must be an array of line items');
 		var payload = {
-			op : "add",
-			items : items
+			op: "add",
+			items: items
 		}
-		return this.master._Patch('/carts/'+id,payload)
+		return this.master._Patch('/carts/' + id, payload)
 	}
 
-	Carts.prototype.remove = function(id,items) {
+	Carts.prototype.remove = function(id, items) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
 
@@ -369,13 +360,13 @@ Carts = (function(){
 
 
 		var payload = {
-			op : "remove",
-			items : items
+			op: "remove",
+			items: items
 		}
-		return this.master._Patch('/carts/'+id,payload)
+		return this.master._Patch('/carts/' + id, payload)
 	}
 
-	Carts.prototype.update = function(id,items) {
+	Carts.prototype.update = function(id, items) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
 
@@ -384,92 +375,83 @@ Carts = (function(){
 
 
 		var payload = {
-			op : "update",
-			items : items
+			op: "update",
+			items: items
 		}
-		return this.master._Patch('/carts/'+id,payload)
+		return this.master._Patch('/carts/' + id, payload)
 	}
 
 	Carts.prototype.delete = function(id) {
-		return this.master._Delete('/carts/'+id)
+		return this.master._Delete('/carts/' + id)
 	}
 
 	return Carts;
 
 })();
 
-Categories = (function(){
+Categories = (function() {
 	function Categories(master) {
 		this.master = master;
 	}
 
 	Categories.prototype.list = function(query) {
-		return this.master._Get('/categories',query);
+		return this.master._Get('/categories', query);
 	}
 
 	Categories.prototype.getById = function(id) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Get('/categories/'+id,{});
+		return this.master._Get('/categories/' + id, {});
 	}
 
 	Categories.prototype.create = function(data) {
-		return this.master._Post('/categories',data)
+		return this.master._Post('/categories', data)
 	}
 
-	Categories.prototype.update = function(id,data,replace) {
+	Categories.prototype.update = function(id, data) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.');
-		if (true === replace)
-			return this.master._Put('/categories/'+id,data)
-		else
-			return this.master._Patch('/categories/'+id,data)
+
+		return this.master._Put('/categories/' + id, data)
+
 	}
 
-	Categories.prototype.patch = function(id,data) {
-		if (isNaN(id))
-			throw new Error('id must be an integer.')
-		return this.master._Patch('/categories/'+id,data)
-	}
 
 	Categories.prototype.delete = function(id) {
-		return this.master._Delete('/categories/'+id)
+		return this.master._Delete('/categories/' + id)
 	}
 
 	return Categories;
 
 })();
-Contents = (function(){
+Contents = (function() {
 	function Contents(master) {
 		this.master = master;
 	}
 
 	Contents.prototype.list = function(query) {
-		return this.master._Get('/contents',query);
+		return this.master._Get('/contents', query);
 	}
 
 	Contents.prototype.getById = function(id) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Get('/contents/'+id,{});
+		return this.master._Get('/contents/' + id, {});
 	}
 
 	Contents.prototype.create = function(data) {
-		return this.master._Post('/contents',data)
+		return this.master._Post('/contents', data)
 	}
 
-	Contents.prototype.update = function(id,data,replace) {
+	Contents.prototype.update = function(id, data) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
 
-		if (true === replace)
-			return this.master._Put('/categories/'+id,data)
-		else
-			return this.master._Patch('/categories/'+id,data)
+		return this.master._Put('/contents/' + id, data)
 	}
 
 	Contents.prototype.delete = function(id) {
-		return this.master._Delete('/contents/'+id)
+		return this.master._Delete('/contents/' + id)
 	}
 
 	return Contents;
@@ -477,37 +459,34 @@ Contents = (function(){
 })();
 
 
-Orders = (function(){
+Orders = (function() {
 	function Orders(master) {
 		this.master = master;
 	}
 
 	Orders.prototype.list = function(query) {
-		return this.master._Get('/orders',query);
+		return this.master._Get('/orders', query);
 	}
 
 	Orders.prototype.getById = function(id) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Get('/orders/'+id,{});
+		return this.master._Get('/orders/' + id, {});
 	}
 
-	Orders.prototype.create = function(data) {		 
-		return this.master._Post('/orders',data)
+	Orders.prototype.create = function(data) {
+		return this.master._Post('/orders', data)
 	}
 
-	Orders.prototype.update = function(id,data,replace) {
+	Orders.prototype.update = function(id, data) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
 
-		if (true === replace)
-			return this.master._Put('/categories/'+id,data)
-		else
-			return this.master._Patch('/categories/'+id,data)
+		return this.master._Put('/orders/' + id, data)
 	}
 
 	Orders.prototype.delete = function(id) {
-		return this.master._Delete('/orders/'+id)
+		return this.master._Delete('/orders/' + id)
 	}
 
 	return Orders;
@@ -515,79 +494,70 @@ Orders = (function(){
 })();
 
 
-Products = (function(){
+Products = (function() {
 	function Products(master) {
 		this.master = master;
 	}
 
 	Products.prototype.list = function(query) {
-		return this.master._Get('/products',query);
+		return this.master._Get('/products', query);
 	}
 
 	Products.prototype.getById = function(id) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Get('/products/'+id,{});
+		return this.master._Get('/products/' + id, {});
 	}
 
 	Products.prototype.create = function(data) {
-		return this.master._Post('/products',data)
+		return this.master._Post('/products', data)
 	}
 
-	Products.prototype.update = function(id,data,replace) {
+	Products.prototype.update = function(id, data) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		if (true === replace)
-			return this.master._Put('/categories/'+id,data)
-		else
-			return this.master._Patch('/categories/'+id,data)
+
+		return this.master._Put('/products/' + id, data)
 	}
 
-	Products.prototype.patch = function(id,data) {
-		if (isNaN(id))
-			throw new Error('id must be an integer.')
-		return this.master._Patch('/products/'+id,data)
-	}
+
 
 	Products.prototype.delete = function(id) {
-		return this.master._Delete('/products/'+id)
+		return this.master._Delete('/products/' + id)
 	}
 
 	return Products;
 
 })();
 
-Shippings = (function(){
+Shippings = (function() {
 	function Shippings(master) {
 		this.master = master;
 	}
 
 	Shippings.prototype.list = function(query) {
-		return this.master._Get('/shippings',query);
+		return this.master._Get('/shippings', query);
 	}
 
 	Shippings.prototype.getById = function(id) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Get('/shippings/'+id,{});
+		return this.master._Get('/shippings/' + id, {});
 	}
 
 	Shippings.prototype.create = function(data) {
-		return this.master._Post('/shippings',data)
+		return this.master._Post('/shippings', data)
 	}
 
-	Shippings.prototype.update = function(id,data,replace) {
+	Shippings.prototype.update = function(id, data) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
 
-		if (true === replace)
-			return this.master._Put('/categories/'+id,data)
-		else
-			return this.master._Patch('/categories/'+id,data)
+		return this.master._Put('/shippings/' + id, data)
 	}
 
 	Shippings.prototype.delete = function(id) {
-		return this.master._Delete('/shippings/'+id)
+		return this.master._Delete('/shippings/' + id)
 	}
 
 	return Shippings;
@@ -596,50 +566,45 @@ Shippings = (function(){
 
 
 
-
-Users = (function(){
+Users = (function() {
 	function Users(master) {
 		this.master = master;
 	}
 
 	Users.prototype.list = function(query) {
-		return this.master._Get('/users',query);
+		return this.master._Get('/users', query);
 	}
 
 	Users.prototype.getById = function(id) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		return this.master._Get('/users/'+id,{});
+		return this.master._Get('/users/' + id, {});
 	}
 
 	Users.prototype.create = function(data) {
-		return this.master._Post('/users',data)
+		return this.master._Post('/users', data)
 	}
 
-	Users.prototype.update = function(id,data,replace) {
+	Users.prototype.update = function(id, data) {
 		if (isNaN(id))
 			throw new Error('id must be an integer.')
-		if (true === replace)
-			return this.master._Put('/categories/'+id,data)
-		else
-			return this.master._Patch('/categories/'+id,data)
-	}
-	Users.prototype.patch = function(id,data) {
-			if (isNaN(id))
-				throw new Error('id must be an integer.')
-			return this.master._Patch('/users/'+id,data)
-		}
 
-	Users.prototype.authenticate = function(email,password) {
+
+		return this.master._Put('/users/' + id, data)
+
+	}
+
+
+	Users.prototype.authenticate = function(email, password) {
 		var payload = {
-			email : email,
-			password : password
+			email: email,
+			password: password
 		}
-		return this.master._Post('/users/authenticate',payload);
+		return this.master._Post('/users/authenticate', payload);
 	}
 
 	Users.prototype.delete = function(id) {
-		return this.master._Delete('/users/'+id)
+		return this.master._Delete('/users/' + id)
 	}
 
 	return Users;

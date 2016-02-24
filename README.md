@@ -30,7 +30,7 @@ var prod = mc.products.getById(PRODUCT_ID);
 var new_order = {
    billing_address : {...},
    shipping_address : {...},
-   items : [{product_id:1, variant_id : 1,quantity:1}]
+   items : [{product_id:prod.id, variant_id : prod.variants[2].variant_id,quantity:1}]
 }
 
 mc.orders.create(new_order);
