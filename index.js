@@ -10,7 +10,7 @@
 
 
 var request = require('superagent');
-var promise = require('bluebird');
+var Promise = require('bluebird');
 var crypto = require('crypto');
 
 
@@ -613,6 +613,6 @@ Users = (function() {
 
 
 
-Marketcloud.Promise = promise;
+Marketcloud.Promise = Promise;
 
 module.exports = Marketcloud;
