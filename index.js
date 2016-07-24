@@ -16,7 +16,7 @@ var Promise = require('bluebird');
 var crypto = require('crypto');
 
 
-var API_BASE_URL = 'http://api.marketcloud.it/v0';
+var API_BASE_URL = 'https://api.marketcloud.it/v0';
 
 var Marketcloud = {};
 

@@ -1,6 +1,6 @@
 {
   "name": "marketcloud-node",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Marketcloud NodeJS sdk",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/Marketcloud/marketcloud-node#readme",
   "dependencies": {
-    "bluebird": "^3.1.1",
+    "bluebird": "^3.4.1",
     "superagent": "^1.6.1"
   }
 }
