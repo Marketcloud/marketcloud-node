@@ -26,9 +26,11 @@ var Carts = require('./src/carts.js');
 var Categories = require('./src/categories.js');
 var Contents = require('./src/contents.js');
 var Orders = require('./src/orders.js');
+var Payments = require('./src/payments.js');
 var Products = require('./src/products.js');
 var Shippings = require('./src/shippings.js');
 var Users = require('./src/users.js');
+
 
 // Utility
 var isNullOrUndefined = function(v) {
@@ -43,7 +45,6 @@ Marketcloud.Client = function(config) {
 	this.secret_key = config.secret_key;
 
 	// Resources
-	this.products = new Products(this);
 	this.addresses = new Addresses(this);
 	this.brands = new Brands(this);
 	this.carts = new Carts(this);
@@ -51,13 +52,12 @@ Marketcloud.Client = function(config) {
 	this.contents = new Contents(this);
 	//this.discounts = new Discounts(this); TODO
 	this.orders = new Orders(this);
-	//this.payments = new Payments(this);
-	//this.paymentMethods = new PaymentMethods(this)
+	this.payments = new Payments(this);
+	
 	this.products = new Products(this);
 	this.shippings = new Shippings(this);
-	//this.shipment = new Shipment(this); TODO
 	//this.stores = new Stores(this); TODO
-	//this.taxes = new Taxes(this); TODO
+	
 	this.users = new Users(this);
 
 	this.RETRIES = 0;

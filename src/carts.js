@@ -1,21 +1,16 @@
 module.exports = (function() {
+
+	var Resource = require('./resource.js');
 	function Carts(master) {
-		this.master = master;
+
+		Resource.call(this,master);
+
+		this.endpoint = '/carts'
 	}
 
-	Carts.prototype.list = function(query) {
-		return this.master._Get('/carts', query);
-	}
 
-	Carts.prototype.getById = function(id) {
-		if (isNaN(id))
-			throw new Error('id must be an integer.')
-		return this.master._Get('/carts/' + id, {});
-	}
 
-	Carts.prototype.create = function(data) {
-		return this.master._Post('/carts', data)
-	}
+	Carts.prototype = new Resource();
 
 	Carts.prototype.add = function(id, items) {
 		if (isNaN(id))
@@ -60,9 +55,6 @@ module.exports = (function() {
 		return this.master._Patch('/carts/' + id, payload)
 	}
 
-	Carts.prototype.delete = function(id) {
-		return this.master._Delete('/carts/' + id)
-	}
 
 	return Carts;
 

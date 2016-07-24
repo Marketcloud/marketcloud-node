@@ -5,20 +5,11 @@
 module.exports = (function() {
 
 
-	function Resource(master,config) {
+	function Resource(master) {
 
 		//Reference to the client
 		this.master = master;
 
-		// Api Endpoint Path
-		this.endpoint = config.endpoint;
-
-		// Adding more methods to the resource
-		if (config.hasOwnProperty('additionalEndpoints')){
-
-				for (var k in config.additionalEndpoints)
-					this[k] = this.config.additionalEndpoints[k];
-		}
 	}
 
 	
