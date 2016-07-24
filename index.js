@@ -95,8 +95,11 @@ Marketcloud.Client.prototype.requestFactory = function(config) {
 					return _this.authenticate()
 						.then(function(response) {
 							//Retry was successful, resetting retries
-							_this.RETRIES = 0;
+							if (response.code < 400){
+								_this.RETRIES = 0;
+							}
 							return _this.requestFactory(config);
+							
 						})
 						.catch(function(response){
 							reject(new Error('Unable to re-authenticate the client.'))
