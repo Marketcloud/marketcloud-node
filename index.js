@@ -9,14 +9,12 @@
  */
 
 (function(module){
-
+"use strict"
 
 var request = require('superagent');
 var Promise = require('bluebird');
 var crypto = require('crypto');
 
-
-var API_BASE_URL = 'https://api.marketcloud.it/v0';
 
 var Marketcloud = {};
 
@@ -33,16 +31,35 @@ var Users = require('./src/users.js');
 
 
 // Utility
-var isNullOrUndefined = function(v) {
+/*var isNullOrUndefined = function(v) {
 	return (v === null || 'undefined' === typeof v)
-}
+}*/
 
-// Client class definition
+/*
+ *
+ *	[Client The client's instance]
+ *
+ *	@param {string} config.public_key The application's public key
+ *	@param {string} config.secret_key The application's secret key
+ *	
+ * 
+ */
 Marketcloud.Client = function(config) {
 
 	this.token = null;
 	this.public_key = config.public_key;
 	this.secret_key = config.secret_key;
+
+	this.baseUrl = 'https://api.marketcloud.it';
+
+	this.apiVersion = 'v0';
+
+	// If this is true, then api responses with status code >= 400
+	//  are rejected as errors.
+	//  If set to false all responses from server are resolved
+	//  
+	//  In both cases, "failures" are rejected.
+	this.rejectApiErrors = config.rejectApiErrors || true;
 
 	// Resources
 	this.addresses = new Addresses(this);
@@ -65,12 +82,37 @@ Marketcloud.Client = function(config) {
 
 }
 
+/*
+*
+* 	@returns {string} The base url for api calls
+* 	e.g. https://api.marketcloud.it/v0
+*/
+Marketcloud.Client.prototype.getApiBaseUrl = function() {
+	return this.baseUrl + '/' + this.apiVersion;
+}
+/*
+ *
+ * 	[requestFactory: Performs an HTTP request based on the configuration parameter]
+ *
+ *	@param {string} config.method The HTTP method 'PUT','POST','GET','PATCH' etc
+ *	@param {object} config.data POST data to append to the request
+ *	@param {object} config.query Query string object
+ */
 Marketcloud.Client.prototype.requestFactory = function(config) {
 	var _this = this;
+	
 
+	if (this.token === null) {
+		
+		return this.authenticate()
+			.then(function() {
+				
+				return _this.requestFactory(config);
+			});
+	}
 
-	var the_promise = new Promise(function(resolve, reject) {
-		var req = request(config.method, API_BASE_URL + config.endpoint);
+	return new Promise(function(resolve, reject) {
+		var req = request(config.method, _this.getApiBaseUrl() + config.endpoint);
 
 		req.set('Authorization', _this.getAuthorizationHeader());
 
@@ -80,58 +122,56 @@ Marketcloud.Client.prototype.requestFactory = function(config) {
 		if (config.data)
 			req.send(config.data || {});
 
-
+		
 		req.end(function(err, response) {
-			if (response && response.status === 401) {
 
-				// Token may be expired, or the service is currently unavailable
-				// Retrying
-				if (_this.RETRIES <= _this.MAX_RETRIES) {
-					_this.RETRIES += 1;
-					console.log("Retrying ("+_this.RETRIES+" attempt)")
-					
+				
+				if (err){
 
-					
-					return _this.authenticate()
-						.then(function(response) {
-							//Retry was successful, resetting retries
-							if (response.code < 400){
-								_this.RETRIES = 0;
-							}
-							return _this.requestFactory(config);
+					if (401 === err.response.statusCode){
+						// The token expired
+						// need to refresh it
+						console.log("Token expired, must re-authenticate")
+						return _this.authenticate()
+							.then(function() {
+								console.log("Re-authenticated after token expiration")
+								return _this.requestFactory(config);
+							});
+					}
+
+					if (err.response) {
+						// Packaging the error response in an error
+						// TODO create ad-hoc errors
+						// This is most likely a response with status >= 400
+						if (_this.rejectApiErrors) {
+							// If the  option is true
+							// then responses with status >= 400 are rejected as errors
+							var _err = new Error();
+							for (var k in err.response.body.errors[0])
+								_err[k] = err.response.body.errors[0][k];
+							reject(_err);
+						} else {
+							// If the simple option is false
+							// then responses with code >= 400 are resolved
 							
-						})
-						.catch(function(response){
-							reject(new Error('Unable to re-authenticate the client.'))
-						})
-				} else {
-					console.log("Reached maximum number of retries. Quitting...")
-					reject(new Error("Reached maximum number of retries."))
-				}
-			} else {
-				if (err) {
-					if (response && response.body){
-						console.log(response.body)
-						resolve(response.body.errors[0])
+							resolve(err.response.body.errors[0]);
+
+						}
+						
 					}
 					else
-						reject(err)
-				} else {
-					resolve(response.body.data)
+						reject(err);
+
 				}
-			}
+				else
+					resolve(response.body.data);
+				
+			
 
 		})
 	});
 
-	if (this.secret_key !== null && isNullOrUndefined(this.token)) {
-		return this.authenticate()
-			.then(function(response) {
-				return the_promise;
-			});
-	} else {
-		return the_promise;
-	}
+	
 	
 }
 
@@ -144,7 +184,7 @@ Marketcloud.Client.prototype._Get = function(endpoint, query) {
 	})
 }
 // Utility HTTP request
-Marketcloud.Client.prototype._Post = function(endpoint, data, options) {
+Marketcloud.Client.prototype._Post = function(endpoint, data) {
 	return this.requestFactory({
 		method: 'POST',
 		endpoint: endpoint,
@@ -180,7 +220,7 @@ Marketcloud.Client.prototype._Delete = function(endpoint) {
 }
 
 
-// Utility that returns a formatted HTTP header
+// Utility, returns a formatted HTTP header
 Marketcloud.Client.prototype.getAuthorizationHeader = function() {
 	if (this.token)
 		return this.public_key + ':' + this.token
@@ -197,27 +237,37 @@ Marketcloud.Client.prototype.authenticate = function() {
 		.update(h)
 		.digest('base64');
 
-	var that = this;
+	var _this = this;
 	var payload = {
-		publicKey: that.public_key,
+		publicKey: _this.public_key,
 		secretKey: hash,
 		timestamp: now
 	}
 	return new Promise(function(resolve, reject) {
 		request
-			.post(API_BASE_URL + '/tokens')
-			.set('Authorization', that.getAuthorizationHeader())
+			.post(_this.getApiBaseUrl() + '/tokens')
+			.set('Authorization', _this.getAuthorizationHeader())
 			.send(payload)
 			.end(function(err, response) {
-				if (err) {
-					if (response)
-						resolve(response.body.errors[0])
+
+				if (err){
+					if (err.response) {
+						// Packaging the error response in an error
+						// TODO create ad-hoc errors
+						var _err = new Error();
+						for (var k in err.response.body.errors[0])
+							_err[k] = err.response.body.errors[0][k];
+						reject(_err);
+					}
 					else
-						reject(err)
-				} else {
-					that.token = response.body.token
-					resolve(response.body.data)
+						reject(err);
+
 				}
+				else{
+					_this.token = response.body.token;
+					resolve(response.body.data);
+				}
+				
 			})
 	})
 
@@ -226,7 +276,8 @@ Marketcloud.Client.prototype.authenticate = function() {
 }
 
 
-// Handy reference to Bluebird
+// Handy reference to Bluebird so you don't have to
+// require it again because of Node.
 Marketcloud.Promise = Promise;
 
 

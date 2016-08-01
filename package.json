@@ -25,5 +25,9 @@
   "dependencies": {
     "bluebird": "^3.4.1",
     "superagent": "^1.6.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.0.0"
   }
 }
