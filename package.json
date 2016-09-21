@@ -1,6 +1,6 @@
 {
   "name": "marketcloud-node",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Marketcloud NodeJS sdk",
   "main": "index.js",
   "scripts": {
