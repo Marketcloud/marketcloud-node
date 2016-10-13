@@ -131,18 +131,20 @@ Marketcloud.Client.prototype.requestFactory = function(config) {
 				
 				if (err){
 
-					if (401 === err.response.statusCode){
-						// The token expired
-						// need to refresh it
-						console.log("Token expired, must re-authenticate")
-						return _this.authenticate()
-							.then(function() {
-								console.log("Re-authenticated after token expiration")
-								return _this.requestFactory(config);
-							});
-					}
+					
 
 					if (err.response) {
+
+						if (401 === err.response.statusCode){
+							// The token expired
+							// need to refresh it
+							console.log("Token expired, must re-authenticate")
+							return _this.authenticate()
+								.then(function() {
+									console.log("Re-authenticated after token expiration")
+									return _this.requestFactory(config);
+								});
+						}
 						// Packaging the error response in an error
 						// TODO create ad-hoc errors
 						// This is most likely a response with status >= 400
