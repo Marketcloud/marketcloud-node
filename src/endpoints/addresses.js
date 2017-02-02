@@ -1,15 +1,13 @@
 
 module.exports = (function() {
 	
-
-
-
 	var Resource = require('./resource.js');
 	function Addresses(master) {
 
 		Resource.call(this,master);
-
-		this.endpoint = '/addresses'
+		
+		this.name = 'addresses';
+		this.endpoint = '/'+this.name;
 	}
 
 

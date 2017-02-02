@@ -5,7 +5,8 @@ module.exports = (function() {
 
 		Resource.call(this,master);
 
-		this.endpoint = '/carts'
+		this.name = 'carts';
+		this.endpoint = '/'+this.name;
 	}
 
 

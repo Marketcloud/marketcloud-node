@@ -3,6 +3,8 @@ module.exports = (function() {
 	function Payments(master) {
 		this.master = master;
 
+		this.name = 'payments';
+		this.endpoint = '/'+this.name;
 
 		this.Braintree = {
 			generateClientToken : function() {
