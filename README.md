@@ -6,6 +6,9 @@ Marketcloud API official nodejs client library
 npm install marketcloud-node
 ```
 
+## Updating
+Please remember to check the changelog for important information whenever updating to the latest version!
+
 ## Documentation
 The official documentation is available at http://www.marketcloud.it/documentation/nodejs
 
@@ -27,18 +30,22 @@ var product = {
 			stock_level : 10,
 			author : 'Neil Gaiman',
 			publisher : 'Vertigo',
-			images : ['https://nothingbutcomics.files.wordpress.com/2013/10/sndm-cv1-cbldf-bw-var-4c717.jpg']
+			images : ['https://images.com/comic_cover.jpg']
 		}
+
+		
 //Save the product
 marketcloud.products.create(product)
 	.then(function(response){
-		var product_id = response.body.data.id
-		expect(response.status).to.equal(200)
+		var product_id = response.data.id
+		expect(response.status).to.equal(true)
 	})
+
+
 //Retrieve a particular product
-marketcloud.products.getById(PRODUCT_ID)
-.then(function(product){
-     
+marketcloud.products.getById(123)
+.then(function(response){
+     console.log("The product is",response.data)
 });
 
 
@@ -51,8 +58,10 @@ var new_order = {
 }
 
 marketcloud.orders.create(new_order)
-.then(function(order){
+.then(function(response){
 	// Handle success
+	// Log order data
+	console.log(response.data);
 })
 .catch(function(error){
  // Handle error
