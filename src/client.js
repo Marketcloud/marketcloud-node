@@ -1,5 +1,4 @@
 module.exports = (function() {
-
 	"use strict";
 
 	var	Promise = require('bluebird'),
@@ -46,6 +45,11 @@ module.exports = (function() {
 		this.RETRIES = 0;
 		this.MAX_RETRIES = 2;
 
+
+		// This is the property that will hold a reference to the last 
+		// request's configuration.
+		this.LAST_REQUEST = null;
+
 	}
 
 	/*
@@ -78,23 +82,30 @@ module.exports = (function() {
 		}
 
 		return new Promise(function(resolve, reject) {
+			// Initialize the superagent Request object
 			var req = request(config.method, _this.getApiBaseUrl() + config.endpoint);
+
 
 			req.set('Authorization', _this.getAuthorizationHeader());
 
+			// Setting the request query object
 			if (config.query)
 				req.query(config.query || {});
 
+
+			// Setting the body
 			if (config.data)
 				req.send(config.data || {});
 
 
+			// For observability and testability
+			_this.LAST_REQUEST = config;
+
+			// Firing the request
 			req.end(function(err, response) {
 
 
 				if (err) {
-
-
 
 					if (err.response) {
 
