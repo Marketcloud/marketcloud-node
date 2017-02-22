@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/Marketcloud/marketcloud-node.svg?branch=master)](https://travis-ci.org/Marketcloud/marketcloud-node)
 # marketcloud-node
 Marketcloud API official nodejs client library
 
