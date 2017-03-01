@@ -13,11 +13,11 @@ module.exports = (function() {
 
 	Promotions.prototype = new Resource();
 
-	Promotions.prototype.getByPromotionId = function(promotion_id) {
-		if (isNaN(id))
+	Promotions.prototype.getByCart = function(cart_id) {
+		if ("number" !== typeof cart_id)
 			throw new Error('id must be an integer.');
 
-		return this.master._Patch('/promotions/cart/' + cart_id)
+		return this.master._Get('/promotions/cart/' + cart_id,{})
 	}
 
 
