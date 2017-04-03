@@ -18,7 +18,6 @@ describe('Base Resource testing',function(){
 	Fixtures.decorateWithResourceEndpoint(client);
 
 	it('Should get a list of resources',function(){
-
 			return client.resources.list()
 							.then(function(response){
 								expect(client.LAST_REQUEST).to.deep.equal({
