@@ -1,28 +1,21 @@
-module.exports = (function() {
+module.exports = (function () {
+  var Resource = require('./resource.js')
+  function Promotions (master) {
+    Resource.call(this, master)
 
-	var Resource = require('./resource.js');
-	function Promotions(master) {
+    this.name = 'promotions'
+    this.endpoint = '/' + this.name
+  }
 
-		Resource.call(this,master);
+  Promotions.prototype = new Resource()
 
-		this.name = 'promotions';
-		this.endpoint = '/'+this.name;
-	}
+  Promotions.prototype.getByCart = function (cartId) {
+    if (typeof cartId !== 'number') {
+      throw new Error('id must be an integer.')
+    }
 
+    return this.master._Get('/promotions/cart/' + cartId, {})
+  }
 
-
-	Promotions.prototype = new Resource();
-
-	Promotions.prototype.getByCart = function(cart_id) {
-		if ("number" !== typeof cart_id)
-			throw new Error('id must be an integer.');
-
-		return this.master._Get('/promotions/cart/' + cart_id,{})
-	}
-
-
-
-
-	return Promotions;
-
-})();
+  return Promotions
+})()

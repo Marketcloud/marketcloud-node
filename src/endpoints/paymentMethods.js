@@ -1,18 +1,13 @@
-module.exports = (function() {
+module.exports = (function () {
+  var Resource = require('./resource.js')
+  function PaymentMethods (master) {
+    Resource.call(this, master)
 
-	var Resource = require('./resource.js');
-	function PaymentMethods(master) {
+    this.name = 'paymentMethods'
+    this.endpoint = '/' + this.name
+  }
 
-		Resource.call(this,master);
+  PaymentMethods.prototype = new Resource()
 
-		this.name = 'paymentMethods';
-		this.endpoint = '/'+this.name;
-	}
-
-
-
-	PaymentMethods.prototype = new Resource();
-
-	return PaymentMethods;
-
-})();
+  return PaymentMethods
+})()

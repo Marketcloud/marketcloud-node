@@ -1,18 +1,13 @@
-module.exports = (function() {
+module.exports = (function () {
+  var Resource = require('./resource.js')
+  function Collections (master) {
+    Resource.call(this, master)
 
-	var Resource = require('./resource.js');
-	function Collections(master) {
+    this.name = 'collections'
+    this.endpoint = '/' + this.name
+  }
 
-		Resource.call(this,master);
+  Collections.prototype = new Resource()
 
-		this.name = 'collections';
-		this.endpoint = '/'+this.name;
-	}
-
-
-
-	Collections.prototype = new Resource();
-
-	return Collections;
-
-})();
+  return Collections
+})()

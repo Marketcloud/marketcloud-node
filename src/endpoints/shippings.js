@@ -1,19 +1,13 @@
-module.exports = (function() {
+module.exports = (function () {
+  var Resource = require('./resource.js')
+  function Shippings (master) {
+    Resource.call(this, master)
 
+    this.name = 'shippings'
+    this.endpoint = '/' + this.name
+  }
 
-	var Resource = require('./resource.js');
-	function Shippings(master) {
+  Shippings.prototype = new Resource()
 
-		Resource.call(this,master);
-
-		this.name = 'shippings';
-		this.endpoint = '/'+this.name;
-	}
-
-
-
-	Shippings.prototype = new Resource();
-
-	return Shippings;
-
-})();
+  return Shippings
+})()

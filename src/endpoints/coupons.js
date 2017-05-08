@@ -1,18 +1,13 @@
-module.exports = (function() {
+module.exports = (function () {
+  var Resource = require('./resource.js')
+  function Coupons (master) {
+    Resource.call(this, master)
 
-	var Resource = require('./resource.js');
-	function Coupons(master) {
+    this.name = 'coupons'
+    this.endpoint = '/' + this.name
+  }
 
-		Resource.call(this,master);
+  Coupons.prototype = new Resource()
 
-		this.name = 'coupons';
-		this.endpoint = '/'+this.name;
-	}
-
-
-
-	Coupons.prototype = new Resource();
-
-	return Coupons;
-
-})();
+  return Coupons
+})()

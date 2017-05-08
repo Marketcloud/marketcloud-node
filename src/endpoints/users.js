@@ -1,28 +1,21 @@
-module.exports = (function() {
+module.exports = (function () {
+  var Resource = require('./resource.js')
+  function Users (master) {
+    Resource.call(this, master)
 
+    this.name = 'users'
+    this.endpoint = '/' + this.name
+  }
 
-	var Resource = require('./resource.js');
-	function Users(master) {
+  Users.prototype = new Resource()
 
-		Resource.call(this,master);
+  Users.prototype.authenticate = function (email, password) {
+    var payload = {
+      email: email,
+      password: password
+    }
+    return this.master._Post('/users/authenticate', payload)
+  }
 
-		this.name = 'users';
-		this.endpoint = '/'+this.name;
-	}
-
-
-
-	Users.prototype = new Resource();
-
-	Users.prototype.authenticate = function(email, password) {
-		var payload = {
-			email: email,
-			password: password
-		}
-		return this.master._Post('/users/authenticate', payload);
-	}
-
-
-	return Users;
-
-})();
+  return Users
+})()

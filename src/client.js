@@ -5,7 +5,9 @@ module.exports = (function () {
   var crypto = require('crypto')
   var request = require('superagent')
   var path = require('path')
-  var endpoints = require(path.join(__dirname, 'endpoints.js'))
+  var endpoints = require(path.join(__dirname, 'endpoints.js'));
+
+  const VERSION = require('../package.json').version;
 
   /*
    *
@@ -82,7 +84,13 @@ module.exports = (function () {
       // Initialize the superagent Request object
       var req = request(config.method, _this.getApiBaseUrl() + config.endpoint)
 
-      req.set('Authorization', _this.getAuthorizationHeader())
+      // Addding authorization header
+      req.set('Authorization', _this.getAuthorizationHeader());
+
+      // Adding useful headers about SDK version, this helps us trace bugs
+      // and eventually help users more efficiently
+      req.set('X-sdk-variant', 'nodejs');
+      req.set('X-sdk-version', VERSION);
 
       // Setting the request query object
       if (config.query) {
@@ -104,7 +112,7 @@ module.exports = (function () {
             // This is an auth error. It might be due to the token's expiration
             // We retry the last request after authenticating.
             // If it still fails, then we reject.
-            if (err.response.statusCode === 401) {
+            if (err.response.statusCode === 401 || err.response.statusCode === 403) {
               // TODO add a debug message useful to understand delays in responses.
               return _this.authenticate()
                 .then(function () {
@@ -151,7 +159,10 @@ module.exports = (function () {
     })
   }
 
-  // Utility HTTP request
+  /*
+  * @param {String} endpoint The endpoint to append to the base url for this request
+  * @param {Object} query Object to be used as querystring
+  */
   Client.prototype._Get = function (endpoint, query) {
     return this.requestFactory({
       method: 'GET',
@@ -159,7 +170,12 @@ module.exports = (function () {
       query: query || {}
     })
   }
-    // Utility HTTP request
+  
+
+  /*
+  * @param {String} endpoint The endpoint to append to the base url for this request
+  * @param {Object} data Object to be used as request body
+  */
   Client.prototype._Post = function (endpoint, data) {
     return this.requestFactory({
       method: 'POST',
@@ -168,7 +184,12 @@ module.exports = (function () {
     })
   }
 
-  // Utility HTTP request
+   /*
+  * @param {String} endpoint The endpoint to append to the base url for this request
+  * @param {Object} data Object to be used as request body
+  *
+  * @return {Promise}
+  */
   Client.prototype._Put = function (endpoint, data) {
     return this.requestFactory({
       method: 'PUT',
@@ -177,7 +198,12 @@ module.exports = (function () {
     })
   }
 
-  // Utility HTTP Patch request
+   /*
+  * @param {String} endpoint The endpoint to append to the base url for this request
+  * @param {Object} data Object to be used as request body
+  *
+  * @return {Promise}
+  */
   Client.prototype._Patch = function (endpoint, data) {
     return this.requestFactory({
       method: 'PATCH',
@@ -186,7 +212,11 @@ module.exports = (function () {
     })
   }
 
-  // Utility HTTP Delete request
+   /*
+  * @param {String} endpoint The endpoint to append to the base url for this request
+  *
+  * @return {Promise}
+  */
   Client.prototype._Delete = function (endpoint) {
     return this.requestFactory({
       method: 'DELETE',
@@ -194,7 +224,11 @@ module.exports = (function () {
     })
   }
 
-  // Utility, returns a formatted HTTP header
+  /*
+  *
+  * @return {String} Returns a formatted HTTP header from authentication data
+  *
+  */
   Client.prototype.getAuthorizationHeader = function () {
     if (this.token) {
       return this.public_key + ':' + this.token
@@ -203,7 +237,11 @@ module.exports = (function () {
     }
   }
 
-  // Generates an auth Token from the credentials stored inside the client.
+  /*
+  * Generates an auth Token from the credentials stored inside the client.
+  *
+  * @return {Promise}
+  */
   Client.prototype.authenticate = function () {
     var now = Date.now()
     var h = '' + this.secret_key + now
