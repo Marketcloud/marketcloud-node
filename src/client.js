@@ -7,7 +7,7 @@ module.exports = (function () {
   var path = require('path')
   var endpoints = require(path.join(__dirname, 'endpoints.js'));
 
-  const VERSION = require('../package.json').version;
+  var VERSION = require('../package.json').version;
 
   /*
    *
