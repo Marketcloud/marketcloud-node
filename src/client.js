@@ -113,7 +113,7 @@ module.exports = (function () {
             // We retry the last request after authenticating.
             // If it still fails, then we reject.
             if (err.response.statusCode === 401 || err.response.statusCode === 403) {
-              // TODO add a debug message useful to understand delays in responses.
+
               return _this.authenticate()
                 .then(function () {
                   // Re authenticated after token expiration
@@ -132,7 +132,7 @@ module.exports = (function () {
             }
 
             // Packaging the error response in an error
-            // TODO create ad-hoc errors
+
             // This is most likely a response with status >= 400
             if (_this.rejectApiErrors) {
               // If the  option is true
@@ -263,7 +263,7 @@ module.exports = (function () {
           if (err) {
             if (err.response) {
               // Packaging the error response in an error
-              // TODO create ad-hoc errors
+
               var _err = new Error()
               for (var k in err.response.body.errors[0]) {
                 _err[k] = err.response.body.errors[0][k]
