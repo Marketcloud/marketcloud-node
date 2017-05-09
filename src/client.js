@@ -113,7 +113,6 @@ module.exports = (function () {
             // We retry the last request after authenticating.
             // If it still fails, then we reject.
             if (err.response.statusCode === 401 || err.response.statusCode === 403) {
-
               return _this.authenticate()
                 .then(function () {
                   // Re authenticated after token expiration
