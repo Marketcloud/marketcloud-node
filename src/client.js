@@ -5,9 +5,9 @@ module.exports = (function () {
   var crypto = require('crypto')
   var request = require('superagent')
   var path = require('path')
-  var endpoints = require(path.join(__dirname, 'endpoints.js'));
+  var endpoints = require(path.join(__dirname, 'endpoints.js'))
 
-  var VERSION = require('../package.json').version;
+  var VERSION = require('../package.json').version
 
   /*
    *
@@ -85,12 +85,12 @@ module.exports = (function () {
       var req = request(config.method, _this.getApiBaseUrl() + config.endpoint)
 
       // Addding authorization header
-      req.set('Authorization', _this.getAuthorizationHeader());
+      req.set('Authorization', _this.getAuthorizationHeader())
 
       // Adding useful headers about SDK version, this helps us trace bugs
       // and eventually help users more efficiently
-      req.set('X-sdk-variant', 'nodejs');
-      req.set('X-sdk-version', VERSION);
+      req.set('X-sdk-variant', 'nodejs')
+      req.set('X-sdk-version', VERSION)
 
       // Setting the request query object
       if (config.query) {
@@ -170,7 +170,6 @@ module.exports = (function () {
       query: query || {}
     })
   }
-  
 
   /*
   * @param {String} endpoint The endpoint to append to the base url for this request
