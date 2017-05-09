@@ -1,6 +1,8 @@
-[![Build Status](https://travis-ci.org/Marketcloud/marketcloud-node.svg?branch=master)](https://travis-ci.org/Marketcloud/marketcloud-node)
-# marketcloud-node
-Marketcloud API official nodejs client library
+[![Build Status](https://travis-ci.org/Marketcloud/marketcloud-node.svg?branch=master)](https://travis-ci.org/Marketcloud/marketcloud-node) [![Known Vulnerabilities](https://snyk.io/test/github/Marketcloud/marketcloud-node/badge.svg)](https://snyk.io/test/github/snyk/goof) [![Code Climate](https://codeclimate.com/github/Marketcloud/marketcloud-node/badges/gpa.svg)]
+# Marketcloud NodeJS SDK
+![Marketcloud](http://www.marketcloud.it/img/logo/new_with_text.png)
+
+This is the repository for Marketcloud's official nodejs client library. Please refer to the [website](https://www.marketcloud.it) for documentation and more information 
 
 ## Installation
 ```
@@ -25,28 +27,28 @@ var marketcloud = new Marketcloud.Client({
 Every resource method, returns a promise:
 ```javascript
 var product = {
-			name : 'Sandman #3',
-			price : 9.99,
-			stock_type : 'track',
-			stock_level : 10,
-			author : 'Neil Gaiman',
-			publisher : 'Vertigo',
-			images : ['https://images.com/comic_cover.jpg']
-		}
+  name : 'Sandman #3',
+  price : 9.99,
+  stock_type : 'track',
+  stock_level : 10,
+  author : 'Neil Gaiman',
+  publisher : 'Vertigo',
+  images : ['https://images.com/comic_cover.jpg']
+}
 
 		
 //Save the product
 marketcloud.products.create(product)
-	.then(function(response){
-		var product_id = response.data.id
-		expect(response.status).to.equal(true)
-	})
+.then(function(response){
+  var product_id = response.data.id
+  expect(response.status).to.equal(true)
+})
 
 
 //Retrieve a particular product
 marketcloud.products.getById(123)
-.then(function(response){
-     console.log("The product is",response.data)
+.then(function(response){  
+  console.log("The product is",response.data)
 });
 
 
