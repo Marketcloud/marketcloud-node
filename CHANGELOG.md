@@ -1,3 +1,11 @@
+# 2.1.0
+
+* Added Invoices resource
+* Added taxes resource
+* Updated dependencies (Superagent) to avoid potential security issues (https://snyk.io/vuln/npm:ms:20170412)
+
+
+
 # 2.0.0
 
 This version breaks compatibility since now all methods return

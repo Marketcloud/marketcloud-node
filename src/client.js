@@ -151,7 +151,6 @@ module.exports = (function () {
         } else {
           // Refreshing retries
           _this.RETRIES = 0
-
           resolve(response.body)
         }
       })
