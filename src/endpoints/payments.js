@@ -30,9 +30,7 @@ module.exports = (function () {
   }
 
   Payments.prototype.create = function (data) {
-    if (!data.hasOwnProperty('method')) {
-      throw new Error('Missing required attribute method')
-    }
+    
     if (!data.hasOwnProperty('order_id')) {
       throw new Error('Missing required attribute order_id')
     }
