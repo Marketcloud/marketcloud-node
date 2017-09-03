@@ -9,12 +9,13 @@ module.exports = (function () {
 
   Promotions.prototype = new Resource()
 
-  Promotions.prototype.getByCart = function (cartId) {
-    if (typeof cartId !== 'number') {
-      throw new Error('id must be an integer.')
+  Promotions.prototype.getByCart = function (cartId, options) {
+    
+    if ("number" !== typeof(cartId)) {
+      throw new TypeError('id must be an integer number, got ' + typeof(id))
     }
 
-    return this.master._Get('/promotions/cart/' + cartId, {})
+    return this.master._Get('/promotions/cart/' + cartId, {}, options)
   }
 
   return Promotions

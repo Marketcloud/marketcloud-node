@@ -10,7 +10,7 @@ module.exports = (function () {
 
   Carts.prototype = new Resource()
 
-  Carts.prototype.add = function (id, items) {
+  Carts.prototype.add = function (id, items, options) {
     if (isNaN(id)) {
       throw new Error('id must be an integer.')
     }
@@ -22,10 +22,10 @@ module.exports = (function () {
       op: 'add',
       items: items
     }
-    return this.master._Patch('/carts/' + id, payload)
+    return this.master._Patch('/carts/' + id, payload, options)
   }
 
-  Carts.prototype.remove = function (id, items) {
+  Carts.prototype.remove = function (id, items, options) {
     if (isNaN(id)) {
       throw new Error('id must be an integer.')
     }
@@ -38,10 +38,10 @@ module.exports = (function () {
       op: 'remove',
       items: items
     }
-    return this.master._Patch('/carts/' + id, payload)
+    return this.master._Patch('/carts/' + id, payload, options)
   }
 
-  Carts.prototype.update = function (id, items) {
+  Carts.prototype.update = function (id, items, options) {
     if (isNaN(id)) {
       throw new Error('id must be an integer.')
     }
@@ -54,7 +54,7 @@ module.exports = (function () {
       op: 'update',
       items: items
     }
-    return this.master._Patch('/carts/' + id, payload)
+    return this.master._Patch('/carts/' + id, payload, options)
   }
 
   return Carts

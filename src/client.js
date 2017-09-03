@@ -80,6 +80,11 @@ module.exports = (function () {
         })
     }
 
+
+    if (config.options && "object" !== typeof config.options){
+      throw new TypeError('Expected "options" to be an object, got ' + typeof(config.options));
+    }
+
     return new Promise(function (resolve, reject) {
       // Initialize the superagent Request object
       var req = request(config.method, _this.getApiBaseUrl() + config.endpoint)
@@ -91,6 +96,18 @@ module.exports = (function () {
       // and eventually help users more efficiently
       req.set('X-sdk-variant', 'nodejs')
       req.set('X-sdk-version', VERSION)
+
+
+      // Setting request options
+      // These are mostly marketcloud related headers
+      // Like currency and locale
+      if (config.options && config.options.currency){
+        //req.set('Currency', config.options.currency);
+        if (!config.query)
+          config.query = {};
+
+        config.query.currency = config.options.currency;
+      }
 
       // Setting the request query object
       if (config.query) {
@@ -161,11 +178,12 @@ module.exports = (function () {
   * @param {String} endpoint The endpoint to append to the base url for this request
   * @param {Object} query Object to be used as querystring
   */
-  Client.prototype._Get = function (endpoint, query) {
+  Client.prototype._Get = function (endpoint, query, options) {
     return this.requestFactory({
       method: 'GET',
       endpoint: endpoint,
-      query: query || {}
+      query: query || {},
+      options : options || {}
     })
   }
 
@@ -173,11 +191,12 @@ module.exports = (function () {
   * @param {String} endpoint The endpoint to append to the base url for this request
   * @param {Object} data Object to be used as request body
   */
-  Client.prototype._Post = function (endpoint, data) {
+  Client.prototype._Post = function (endpoint, data, options) {
     return this.requestFactory({
       method: 'POST',
       endpoint: endpoint,
-      data: data || {}
+      data: data || {},
+      options : options || {}
     })
   }
 
@@ -187,11 +206,12 @@ module.exports = (function () {
   *
   * @return {Promise}
   */
-  Client.prototype._Put = function (endpoint, data) {
+  Client.prototype._Put = function (endpoint, data, options) {
     return this.requestFactory({
       method: 'PUT',
       endpoint: endpoint,
-      data: data || {}
+      data: data || {},
+      options : options || {}
     })
   }
 
@@ -201,11 +221,12 @@ module.exports = (function () {
   *
   * @return {Promise}
   */
-  Client.prototype._Patch = function (endpoint, data) {
+  Client.prototype._Patch = function (endpoint, data, options) {
     return this.requestFactory({
       method: 'PATCH',
       endpoint: endpoint,
-      data: data || {}
+      data: data || {},
+      options : options || {}
     })
   }
 
@@ -214,10 +235,11 @@ module.exports = (function () {
   *
   * @return {Promise}
   */
-  Client.prototype._Delete = function (endpoint) {
+  Client.prototype._Delete = function (endpoint, options) {
     return this.requestFactory({
       method: 'DELETE',
-      endpoint: endpoint
+      endpoint: endpoint,
+      options : options || {}
     })
   }
 
@@ -275,6 +297,7 @@ module.exports = (function () {
         })
     })
   }
+
 
   return Client
 })()

@@ -9,12 +9,12 @@ module.exports = (function () {
 
   Users.prototype = new Resource()
 
-  Users.prototype.authenticate = function (email, password) {
+  Users.prototype.authenticate = function (email, password, options) {
     var payload = {
       email: email,
       password: password
     }
-    return this.master._Post('/users/authenticate', payload)
+    return this.master._Post('/users/authenticate', payload, options)
   }
 
   return Users
